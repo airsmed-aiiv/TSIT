@@ -1,6 +1,6 @@
 # Installation
 
-Python version >=3.8(conda) is required.
+Python version >=3.9(conda) is required.
 
 ## 0. Clone the repo
 
@@ -18,7 +18,7 @@ conda activate TSIT
 
 ## 2. Install TensorFlow
 
-TensorFlow 2 is used in this repository. If cpu version needed, please delete `tensorflow` in [requirements.txt](../requirements.txt) and follow the official installation guide to install TensorFlow. 
+TensorFlow 2 is used in this repository. If cpu version needed, please delete `tensorflow` in [requirements.txt](requirements.txt) and follow the official installation guide to install TensorFlow. 
 
 ## 3. Install other dependencies
 
