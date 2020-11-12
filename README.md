@@ -1,6 +1,6 @@
 # TSIT
 
-TSIT implementation in PyTorch; TSIT: A Simple and Versatile Framework for Image-to-Image Translation
+TSIT implementation in TensorFlow; TSIT: A Simple and Versatile Framework for Image-to-Image Translation
 
 ![TSIT Main Model](https://user-images.githubusercontent.com/40779417/98499580-45b2a200-228d-11eb-8304-62b888f435f6.png)
 
