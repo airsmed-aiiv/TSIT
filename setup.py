@@ -8,5 +8,5 @@ setup(
     author_email    = 'godppkyh@artiq.kr',
     install_requires= [],
     packages        = find_packages(),
-    python_requires = '>=3.8'  
+    python_requires = '>=3.9'  
 )
