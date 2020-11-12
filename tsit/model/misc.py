@@ -1,5 +1,47 @@
+import numpy as np
+import tensorflow as tf
 from tensorflow.keras import Model
 
+
+def bicubic_kernel(x, a=-0.5):
+    if abs(x) <= 1:
+        return (a + 2)*abs(x)**3 - (a + 3)*abs(x)**2 + 1
+    elif 1 < abs(x) and abs(x) < 2:
+        return a*abs(x)**3 - 5*a*abs(x)**2 + 8*a*abs(x) - 4*a 
+    else:
+        return 0
+    
+def build_filter(factor):
+    size = factor*4
+    k = np.zeros((size))
+    for i in range(size):
+        x = (1/factor)*(i- np.floor(size/2) +0.5)
+        k[i] = bicubic_kernel(x)
+    k = k / np.sum(k)
+    k = np.outer(k, k.T)
+    k = tf.constant(k, dtype=tf.float32, shape=(size, size, 1, 1))
+    return tf.concat([k, k, k], axis=2)
+
+def apply_bicubic_downsample(x, filter, factor):
+    filter_height = factor*4
+    filter_width = factor*4
+    strides = factor
+    pad_along_height = max(filter_height - strides, 0)
+    pad_along_width = max(filter_width - strides, 0)
+    pad_top = pad_along_height // 2
+    pad_bottom = pad_along_height - pad_top
+    pad_left = pad_along_width // 2
+    pad_right = pad_along_width - pad_left
+    x = tf.pad(x, [[0,0], [pad_top,pad_bottom], [pad_left,pad_right], [0,0]], mode='REFLECT')
+    x = tf.nn.depthwise_conv2d(x, filter=filter, strides=[1,strides,strides,1], padding='VALID')
+    return x
+
+class CSRes(Model):
+    def __init__(self):
+        super(CSRes, self).__init__()
+        
+    def call(self, x):
+        pass
 
 class CSResBlk(Model):
     def __init__(self):
