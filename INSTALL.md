@@ -1,6 +1,6 @@
 # Installation
 
-Python version >=3.9(conda) is required.
+Python version >=3.8(conda) is required.
 
 ## 0. Clone the repo
 
@@ -12,7 +12,7 @@ cd TSIT
 ## 1. (Optional) Create a conda environment
 
 ```plain
-conda create -n TSIT python=3.9.*
+conda create -n TSIT python=3.8.*
 conda activate TSIT
 ```
 
