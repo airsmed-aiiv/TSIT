@@ -1,24 +1,29 @@
-from PIL import Image
-import numpy as np
+import glob
 import tensorflow as tf
 
 
-def _int64_feature(value):
-    """Wrapper for inserting int64 features into Example proto."""
-    if not isinstance(value, list):
-        value = [value]
-    return tf.train.Feature(int64_list=tf.train.Int64List(value=value))
+def data2tfrecords(_a, _b, save_path):
+    """Make common dataset as TFRecord.
+    For Image-to-Image Translation task.
 
-
-def _float_feature(value):
-    """Wrapper for inserting float features into Example proto."""
-    if not isinstance(value, list):
-        value = [value]
-    return tf.train.Feature(float_list=tf.train.FloatList(value=value))
-
-
-def _bytes_feature(value):
-    """Wrapper for inserting bytes features into Example proto."""
-    if not isinstance(value, list):
-        value = [value]
-    return tf.train.Feature(bytes_list=tf.train.BytesList(value=value))
+    Args:
+        _a (list): List of A images location.
+        _b (list): List of B images location.
+        save_path (String): Where to save TFRecord file.
+    """
+    writer = tf.io.TFRecordWriter(save_path)
+    for a, b in zip(_a, _b):
+        a = open(a, 'rb').read()
+        b = open(b, 'rb').read()
+        sample = tf.train.Example(
+            feature = {
+                'a': tf.train.Feature(bytes_list=tf.train.BytesList(value=[a])),
+                'b': tf.train.Feature(bytes_list=tf.train.BytesList(value=[b])),
+            }
+        )
+        writer.write(sample.SerializeToString())
+        
+if __name__ == "__main__":
+    a_list = glob.glob('data/fitjul/a/*.png')
+    b_list = glob.glob('data/fitjul/b/*.png')
+    data2tfrecords(a_list, b_list, 'data/fitjul/')
