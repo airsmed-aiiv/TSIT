@@ -15,3 +15,8 @@ class ContentStream(Model):
             if i != 0:
                 content_feature.append(x)
         return content_feature
+
+if __name__ == "__main__":
+    k = [64, 128, 256, 512, 1024, 1024, 1024, 1024]
+    cs = ContentStream(k)
+    
