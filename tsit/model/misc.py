@@ -38,9 +38,9 @@ def apply_bicubic_downsample(x, filter, factor):
     return x
 
 class CSRes(Model):
-    def __init__(self, out_c):
+    def __init__(self, out_c, kernel):
         super(CSRes, self).__init__()
-        self.conv1 = Conv2D(out_c, 3)
+        self.conv1 = Conv2D(out_c, kernel)
         self.in1 = InstanceNormalization()
         self.lrelu = LeakyReLU(alpha=0.2)
     def call(self, x):
@@ -49,12 +49,19 @@ class CSRes(Model):
         x = self.lrelu(x)
         return x
 
+
 class CSResBlk(Model):
-    def __init__(self):
+    def __init__(self, in_c, out_c):
         super(CSResBlk, self).__init__()
         self.ds1 = build_filter(2)
+        self.csres1 = CSRes(in_c, 3)
+        self.csres2 = CSRes(out_c, 3)
+        self.csres3 = CSRes(out_c, 1)
     def call(self, x):
-        pass
+        x = apply_bicubic_downsample(x, self.ds1, 4)
+        x1, sc = self.csres1(x), self.csres2(x)
+        x1 = self.csres3(x)
+        return tf.math.add(x1, sc)
     
 
 class FADE(Model):
