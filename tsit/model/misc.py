@@ -1,7 +1,8 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Model
-
+from tensorflow.keras.layers import Conv2D, LeakyReLU
+from tensorflow_addons.layers import InstanceNormalization
 
 def bicubic_kernel(x, a=-0.5):
     if abs(x) <= 1:
@@ -37,16 +38,21 @@ def apply_bicubic_downsample(x, filter, factor):
     return x
 
 class CSRes(Model):
-    def __init__(self):
+    def __init__(self, out_c):
         super(CSRes, self).__init__()
-        
+        self.conv1 = Conv2D(out_c, 3)
+        self.in1 = InstanceNormalization()
+        self.lrelu = LeakyReLU(alpha=0.2)
     def call(self, x):
-        pass
+        x = self.conv1(x)
+        x = self.in1(x)
+        x = self.lrelu(x)
+        return x
 
 class CSResBlk(Model):
     def __init__(self):
         super(CSResBlk, self).__init__()
-        
+        self.ds1 = build_filter(2)
     def call(self, x):
         pass
     
