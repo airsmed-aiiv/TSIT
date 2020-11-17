@@ -79,16 +79,23 @@ class FADE(Model):
 
     def call(self, x, feature):
         x = self.bn1(x)
-        f1 = self.conv1(feature)
-        f2 = self.conv2(feature)
+        f1 = self.conv1(feature[0])
+        f2 = self.conv2(feature[1])
         x *= f1
         x += f2
         return x
 
 
-class FADEResBlk(Model):
-    def __init__(self):
-        super(FADEResBlk, self).__init__()
+class FADERes(Model):
+    def __init__(self, in_c, out_c):
+        super(CSRes, self).__init__()
+        self.fade = FADE()
+    def call(self, x):
+        return x
 
+
+class FADEResBlk(Model):
+    def __init__(self, in_c, out_c):
+        super(FADEResBlk, self).__init__()
     def call(self, x, feature):
         pass
