@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Model
-from tensorflow.keras.layers import Conv2D, LeakyReLU
+from tensorflow.keras.layers import Conv2D, LeakyReLU, BatchNormalization
 from tensorflow_addons.layers import InstanceNormalization
 
 def bicubic_kernel(x, a=-0.5):
@@ -63,13 +63,27 @@ class CSResBlk(Model):
         x1 = self.csres3(x)
         return tf.math.add(x1, sc)
     
+def AdaIN(content_features, style_features, alpha=1, epsilon = 1e-5):
+    content_mean, content_variance = tf.nn.moments(content_features, [1, 2], keep_dims=True)
+    style_mean, style_variance = tf.nn.moments(style_features, [1, 2], keep_dims=True)
+    normalized_content_features = tf.nn.batch_normalization(content_features, content_mean, content_variance, style_mean, tf.sqrt(style_variance), epsilon)
+    normalized_content_features = alpha * normalized_content_features + (1 - alpha) * content_features
+    return normalized_content_features
 
 class FADE(Model):
     def __init__(self):
         super(FADE, self).__init__()
+        self.bn1 = BatchNormalization()
+        self.conv1 = Conv2D(1, 1)
+        self.conv2 = Conv2D(1, 1)
 
     def call(self, x, feature):
-        pass
+        x = self.bn1(x)
+        f1 = self.conv1(feature)
+        f2 = self.conv2(feature)
+        x *= f1
+        x += f2
+        return x
 
 
 class FADEResBlk(Model):
