@@ -107,7 +107,7 @@ class FADEResBlk(Model):
         self.faderes2 = FADERes(out_c, 3)
         self.fade3 = FADE()
         self.faderes3 = FADERes(out_c, 1)
-        self.up1 = UpSampling2D()
+        self.up1 = UpSampling2D(interpolation='bilinear')
     def call(self, x, feature):
         x1 = self.fade1(x, feature)
         x1 = self.faderes1(x1)
