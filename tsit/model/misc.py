@@ -64,7 +64,7 @@ class CSResBlk(Model):
         x1 = self.csres3(x)
         return tf.math.add(x1, sc)
     
-def AdaIN(content_features, style_features, alpha=1, epsilon = 1e-5):
+def FAdaIN(content_features, style_features, alpha=1, epsilon = 1e-5):
     content_mean, content_variance = tf.nn.moments(content_features, [1, 2], keep_dims=True)
     style_mean, style_variance = tf.nn.moments(style_features, [1, 2], keep_dims=True)
     normalized_content_features = tf.nn.batch_normalization(content_features, content_mean, content_variance, style_mean, tf.sqrt(style_variance), epsilon)
