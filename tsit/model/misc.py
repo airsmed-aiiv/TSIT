@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Model
-from tensorflow.keras.layers import Conv2D, LeakyReLU, BatchNormalization
+from tensorflow.keras.layers import Conv2D, LeakyReLU, BatchNormalization, UpSampling2D
 from tensorflow_addons.layers import InstanceNormalization
 
 
@@ -107,6 +107,7 @@ class FADEResBlk(Model):
         self.faderes2 = FADERes(out_c, 3)
         self.fade3 = FADE()
         self.faderes3 = FADERes(out_c, 1)
+        self.up1 = UpSampling2D()
     def call(self, x, feature):
         x1 = self.fade1(x, feature)
         x1 = self.faderes1(x1)
@@ -114,4 +115,6 @@ class FADEResBlk(Model):
         sc = self.faderes3(x)
         x = self.fade2(x1, feature)
         x = self.faderes2(x)
-        return tf.math.add(x, sc)
+        x = tf.math.add(x, sc)
+        x = self.up1(x)
+        return x
