@@ -3,6 +3,11 @@ from tensorflow.keras import Model
 
 
 class ContentStream(Model):
+    """Model
+
+    Args:
+        Nothing
+    """
     def __init__(self, k):
         super(ContentStream, self).__init__()
         self.csresblk = []
