@@ -80,8 +80,8 @@ class FADE(Model):
 
     def call(self, x, feature):
         x = self.bn1(x)
-        f1 = self.conv1(feature[0])
-        f2 = self.conv2(feature[1])
+        f1 = self.conv1(feature)
+        f2 = self.conv2(feature)
         x *= f1
         x += f2
         return x
