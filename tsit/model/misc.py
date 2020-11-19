@@ -4,6 +4,7 @@ from tensorflow.keras import Model
 from tensorflow.keras.layers import Conv2D, LeakyReLU, BatchNormalization
 from tensorflow_addons.layers import InstanceNormalization
 
+
 def bicubic_kernel(x, a=-0.5):
     if abs(x) <= 1:
         return (a + 2)*abs(x)**3 - (a + 3)*abs(x)**2 + 1
@@ -87,15 +88,30 @@ class FADE(Model):
 
 
 class FADERes(Model):
-    def __init__(self, in_c, out_c):
+    def __init__(self, out_c, kernel):
         super(CSRes, self).__init__()
-        self.fade = FADE()
+        self.lrelu = LeakyReLU(alpha=0.2)
+        self.conv1 = Conv2D(out_c, kernel)
     def call(self, x):
+        x = self.lrelu(x)
+        x = self.conv1(x)
         return x
 
 
 class FADEResBlk(Model):
     def __init__(self, in_c, out_c):
         super(FADEResBlk, self).__init__()
+        self.fade1 = FADE()
+        self.faderes1 = FADERes(in_c, 3)
+        self.fade2 = FADE()
+        self.faderes2 = FADERes(out_c, 3)
+        self.fade3 = FADE()
+        self.faderes3 = FADERes(out_c, 1)
     def call(self, x, feature):
-        pass
+        x1 = self.fade1(x, feature)
+        x1 = self.faderes1(x1)
+        sc = self.fade3(x, feature)
+        sc = self.faderes3(x)
+        x = self.fade2(x1, feature)
+        x = self.faderes2(x)
+        return tf.math.add(x, sc)
