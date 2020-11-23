@@ -610,3 +610,5 @@ MigrationBackup/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,pycharm+all,visualstudiocode,visualstudio
 /.vscode
+/tsit/data/facades
+/tsit/data/fitjul
