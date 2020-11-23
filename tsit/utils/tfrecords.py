@@ -24,6 +24,7 @@ def data2tfrecords(_a, _b, save_path):
         writer.write(sample.SerializeToString())
         
 if __name__ == "__main__":
-    a_list = glob.glob('data/fitjul/a/*.png')
-    b_list = glob.glob('data/fitjul/b/*.png')
-    data2tfrecords(a_list, b_list, 'data/fitjul/')
+    dataset_name = 'example'
+    a_list = glob.glob('data/'+ dataset_name +'/a/*.png')
+    b_list = glob.glob('data/'+ dataset_name +'/b/*.png')
+    data2tfrecords(a_list, b_list, 'data/'+ dataset_name +'/')
