@@ -9,6 +9,7 @@ from tsit.model.generator import Generator
 
 class TSIT(Model):
     def __init__(self, k):
+        super(TSIT, self).__init__()
         self.cs = ContentStream(k)
         self.ss = StyleStream(k)
         self.g = Generator(k)
